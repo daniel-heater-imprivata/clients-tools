@@ -1,0 +1,20 @@
+# Code Owners for agent-os-profiles
+# These users will be automatically requested for review when someone opens a PR
+
+# Default owners for everything
+* @daniel-heater-imprivata
+
+# C++ standards - require review from C++ experts
+/pas-clients/standards/backend/cpp-guidelines.md @daniel-heater-imprivata
+# Add other C++ experts when they join: @teammate1 @teammate2
+
+# Zig standards - require review from Zig experts  
+/pas-clients/standards/backend/zig-guidelines.md @daniel-heater-imprivata
+# Add other Zig experts when they join: @teammate3
+
+# Just patterns - require review from build system experts
+/pas-clients/standards/global/just-patterns.md @daniel-heater-imprivata
+# Add build experts when they join: @teammate4
+
+# Changelog - everyone should review
+/CHANGELOG.md @daniel-heater-imprivata
