@@ -1,148 +1,221 @@
-# Agent-OS Profiles
+# Clients Team Documentation
 
-Shared [Agent-OS](https://github.com/buildermethods/agent-os) profiles for team development.
+Standards, product context, and AI instructions for the PAS Clients team.
 
-## Available Profiles
+## What's Here
 
-### `pas-clients`
+- **[AGENTS.md](AGENTS.md)** - AI agent instructions (Critical Carl persona)
+- **[product/](product/)** - Product mission, roadmap, tech stack, architecture
+- **[standards/](standards/)** - Coding standards (C++, Zig, Just)
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to propose changes
+- **[CHANGELOG.md](CHANGELOG.md)** - Track changes to standards and product docs
 
-**For:** C++ and Zig projects in the PAS Clients team
+---
 
-**Standards:**
-- **C++17** - Modern C++ with RAII, const correctness, threading patterns
-- **Zig 0.15.1** - Explicit over implicit, memory management, error handling
-- **Just** - Command runner patterns and best practices
+## Convention: Sibling Directory Structure
 
-**Use for:** librssconnect, kazui, and other PAS client projects
+**Always clone `clients-docs` as a sibling to your project repos:**
 
-## Quick Start
-
-### 1. Install Agent-OS (if not already installed)
+### In Viewyard Viewsets
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/buildermethods/agent-os/main/scripts/base-install.sh | bash
+viewyard view create CLIENTS-520-websocket
+# Select repos: clients-docs, librssconnect, gatekeeper
+
+# Result:
+~/src/viewyard-viewsets/CLIENTS-520-websocket/
+├── clients-docs/          ← Always include this
+├── librssconnect/
+├── gatekeeper/
+└── audit/
 ```
 
-### 2. Clone This Repository
+### Standalone Work
 
 ```bash
-cd ~/agent-os/profiles
-git clone git@github.com:daniel-heater-imprivata/agent-os-profiles.git
+mkdir ~/src/clients-work
+cd ~/src/clients-work
+git clone git@github.com:daniel-heater-imprivata/clients-docs.git
+git clone git@github.com:imprivata-pas/librssconnect.git
+git clone git@github.com:imprivata-pas/gatekeeper.git
+
+# Result:
+~/src/clients-work/
+├── clients-docs/          ← Clone here first
+├── librssconnect/
+└── gatekeeper/
 ```
 
-### 3. Use in Your Project
+### Ad-Hoc Directories
 
 ```bash
-cd /path/to/your/project
-~/agent-os/scripts/project-install.sh --profile agent-os-profiles/pas-clients
+mkdir ~/src/feature-xyz
+cd ~/src/feature-xyz
+git clone git@github.com:daniel-heater-imprivata/clients-docs.git
+git clone git@github.com:imprivata-pas/librssconnect.git
+
+# Result:
+~/src/feature-xyz/
+├── clients-docs/          ← Clone here first
+└── librssconnect/
 ```
 
-**Note:** The profile path is `agent-os-profiles/pas-clients` because the profile is nested inside the cloned repo.
+---
 
-## Team Installation
+## How It Works
 
-Share these instructions with your team:
+### Each Project References clients-docs
 
-```bash
-# One-time setup
-cd ~/agent-os/profiles
-git clone git@github.com:daniel-heater-imprivata/agent-os-profiles.git
+Each project repository has an `AGENTS.md` file that references `../clients-docs/` using relative paths:
 
-# In each project
-cd /path/to/project
-~/agent-os/scripts/project-install.sh --profile agent-os-profiles/pas-clients
+```markdown
+# librssconnect - AI Agent Instructions
+
+## Team Context
+
+**See [../clients-docs/AGENTS.md](../clients-docs/AGENTS.md) for:**
+- Team standards (C++, Zig, Just)
+- Product mission and roadmap
+- Architecture overview
+- Critical Carl persona
+
+## Project-Specific Context
+...
 ```
 
-## Updating Standards
+### AI Tools Read Both
 
-### For Profile Maintainers
+When you open Augment Code (or any AI tool) in a project:
 
-When you update standards:
+1. AI reads `librssconnect/AGENTS.md`
+2. Follows reference to `../clients-docs/AGENTS.md`
+3. Reads all standards and product docs
+4. Has full context for coding
+
+**No setup commands. No symlinks. Just convention.**
+
+---
+
+## Usage
+
+### Working in Viewyard Viewsets
 
 ```bash
-cd ~/agent-os/profiles/agent-os-profiles
-# Edit files in pas-clients/standards/
+# Create viewset
+viewyard view create CLIENTS-520-websocket
+# Select: clients-docs, librssconnect, gatekeeper
+
+# Work in any project
+cd CLIENTS-520-websocket/librssconnect
+# Open Augment Code - it reads AGENTS.md → ../clients-docs/
+
+# Make changes, commit, push
 git add .
-git commit -m "Update C++ guidelines for X"
+git commit -m "Implement WebSocket support"
 git push
 ```
 
-### For Team Members
-
-To get the latest standards:
+### Working Standalone
 
 ```bash
-# Update the profile
-cd ~/agent-os/profiles/agent-os-profiles
+# Setup once
+mkdir ~/src/clients-work
+cd ~/src/clients-work
+git clone git@github.com:daniel-heater-imprivata/clients-docs.git
+git clone git@github.com:imprivata-pas/librssconnect.git
+
+# Work
+cd librssconnect
+# Open Augment Code - it reads AGENTS.md → ../clients-docs/
+```
+
+### Updating Standards
+
+```bash
+# Make changes
+cd ~/src/clients-docs
+vim standards/cpp-guidelines.md
+vim CHANGELOG.md
+
+# Commit and push
+git add .
+git commit -m "Update C++ guidelines: Add WebSocket patterns"
+git push
+
+# Team members pull updates
+cd ~/src/clients-docs  # or viewset/clients-docs
 git pull
-
-# Re-compile standards in your project
-cd /path/to/your/project
-~/agent-os/scripts/project-update.sh
+# Updated standards immediately available to all projects
 ```
 
-## Profile Structure
+---
 
-```
-agent-os-profiles/
-├── README.md                           # This file
-├── CHANGELOG.md                        # Track standard changes
-└── pas-clients/                        # Profile for PAS Clients team
-    ├── profile-config.yml              # Inherits from default
-    ├── standards/
-    │   ├── backend/
-    │   │   ├── cpp-guidelines.md       # C++17 coding standards
-    │   │   └── zig-guidelines.md       # Zig 0.15.1 coding standards
-    │   └── global/
-    │       └── just-patterns.md        # Just command runner patterns
-    └── workflows/                      # Custom workflows (optional)
-```
+## What's in This Repo
 
-## Standards Overview
+### Product Context
 
-### C++ Guidelines
+- **[mission.md](product/mission.md)** - What we're building and why
+- **[roadmap.md](product/roadmap.md)** - Feature priorities and timeline
+- **[tech-stack.md](product/tech-stack.md)** - Technology choices and rationale
+- **[architecture.md](product/architecture.md)** - How the pieces fit together
 
-- **C++17 only** - No C++20 features
-- **RAII everywhere** - Smart pointers, no raw new/delete
-- **Const correctness** - Think like Rust's borrow checker
-- **Threading safety** - Proper use of shared_from_this, mutex protection
-- **Public C API** - C-only types in include/ directory
+### Coding Standards
 
-### Zig Guidelines
+- **[cpp-guidelines.md](standards/cpp-guidelines.md)** - C++17 coding standards
+- **[zig-guidelines.md](standards/zig-guidelines.md)** - Zig 0.15.1 coding standards
+- **[just-patterns.md](standards/just-patterns.md)** - Task automation best practices
 
-- **Zig 0.15.1** - Version-specific patterns
-- **Explicit over implicit** - Simplicity over cleverness
-- **Memory management** - ArrayList patterns, arena allocators, errdefer
-- **Error handling** - Specific error types, orelse patterns
-- **C interop** - Sentinel-terminated pointers, callback patterns
+### Governance
 
-### Just Patterns
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to propose changes
+- **[CHANGELOG.md](CHANGELOG.md)** - Track changes
+- **[.github/CODEOWNERS](.github/CODEOWNERS)** - Auto-assign reviewers
+- **[.github/pull_request_template.md](.github/pull_request_template.md)** - PR template
 
-- **Use Just's expression language** - Not bash
-- **Built-in functions** - os(), arch(), env_var_or_default()
-- **Error handling** - Use error() for validation
-- **Recipe patterns** - Documentation, parameters, dependencies
+---
 
 ## Contributing
 
-### Proposing Changes
+See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+- How to propose changes to standards
+- PR review process
+- Writing good standards
+- Deprecation process
 
-1. Create a branch
-2. Make your changes to standards files
-3. Update `CHANGELOG.md`
-4. Create a pull request
-5. Get team review
+---
 
-### Standards Philosophy
+## Philosophy
 
-- **Subtract First** - Remove before adding
-- **Explicit over Implicit** - Clear is better than clever
-- **Examples over Explanation** - Show, don't just tell
-- **Why over What** - Explain rationale, not just rules
+### Subtract First
 
-## Resources
+Always ask "what can we remove?" before adding.
 
-- **Agent-OS Documentation**: https://buildermethods.com/agent-os
-- **C++ Core Guidelines**: https://isocpp.github.io/CppCoreGuidelines/
-- **Zig Documentation**: https://ziglang.org/documentation/
-- **Just Manual**: https://just.systems/man/en/
+### Critical Carl
+
+Be direct and honest. Challenge complexity, advocate simplicity.
+
+### One Mission
+
+**Secure, auditable remote access without VPN.**
+
+Every line of code should serve this mission.
+
+---
+
+## Questions?
+
+- Check existing issues for similar discussions
+- Ask in team chat
+- Open an issue for discussion before major changes
+- Tag relevant code owners
+
+---
+
+## Projects Using This
+
+- **librssconnect** - C++ connectivity library
+- **gatekeeper** - Data plane exit point
+- **audit** - MiTM session recording
+- **RDP/SSH/FTP clients** - User-facing applications
+
+All clients team projects reference this repository for standards and product context.
