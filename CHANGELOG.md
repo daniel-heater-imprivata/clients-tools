@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- **Tools directory** (`tools/`)
+  - jira-cli.md: Command-line interface for Jira
+  - More reliable than MCP for accessing tickets
+  - Installation, setup, common commands, workflows
+  - Integration with AI tools and scripts
+
+### Added
 - **Logging Guidelines** (`standards/global/logging-guidelines.md`)
   - Help-focused error messages (inspired by Elm and Rust)
   - Performance considerations for logging

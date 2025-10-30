@@ -127,3 +127,14 @@ AI can generate **ephemeral scripts** on-demand for one-time tasks. These are:
 
 **Retained scripts** (in `scripts/`) are for tasks useful enough to keep and share.
 
+
+---
+
+## Tools
+
+The [tools/](tools/) directory documents tools and workflows used by the team:
+
+- **[jira-cli.md](tools/jira-cli.md)** - Command-line interface for Jira (more reliable than MCP)
+
+See [tools/README.md](tools/README.md) for full list and tool selection criteria.
+
