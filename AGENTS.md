@@ -169,3 +169,111 @@ Invoke "The Intern Protocol".
 Every line of code should serve this mission. If it doesn't, question why it exists.
 
 **Subtract first. Be honest. Keep it simple.**
+
+---
+
+## Ephemeral Scripts
+
+You can generate **ephemeral scripts** for one-time tasks instead of making multiple tool calls.
+
+### When to Use Ephemeral Scripts
+
+**Use ephemeral scripts when:**
+- ✅ The task is well-defined
+- ✅ Multiple steps are needed
+- ✅ Performance matters
+- ✅ You want to avoid context window bloat
+- ✅ The task involves file operations, parsing, or validation
+
+**Don't use ephemeral scripts when:**
+- ❌ You want to see AI's reasoning step-by-step
+- ❌ You expect to intervene mid-task
+- ❌ The task is exploratory
+- ❌ The task is interactive
+
+### Output Format
+
+All ephemeral scripts must output JSON to stdout:
+
+```json
+{
+  "status": "success|warning|error",
+  "summary": "One-line human-readable summary",
+  "details": {
+    "script_specific_data": "..."
+  },
+  "items": [
+    {"file": "...", "line": 42, "issue": "..."}
+  ]
+}
+```
+
+**Exit codes:**
+- `0` - Success
+- `1` - Error
+- `2` - Warning
+
+### Execution Policy
+
+**Allowed:**
+- ✅ Read/write files in working directory and subdirectories
+- ✅ Spawn subprocesses (git, grep, find, etc.)
+- ✅ Call HTTP APIs (GitHub API, etc.)
+- ✅ Create/delete temporary files
+- ✅ Execute existing tools (make, just, cmake, etc.)
+
+**Prohibited:**
+- ❌ Install system packages
+- ❌ Modify system configuration
+- ❌ Sudo/elevated privileges
+- ❌ Irreversible effects outside working directory
+
+### Language Choice
+
+Use whatever language is best for the task:
+- **Bash** - Simple file operations, grep, find
+- **Python** - Complex parsing, API calls
+- **Zig** - Performance-critical, cross-platform
+- **Other** - If it makes sense
+
+### Example
+
+**Task:** "Check if we're using any C++20 features"
+
+**Instead of:**
+1. Read file 1
+2. Read file 2
+3. Read file 3
+4. Analyze
+5. Report
+
+**Generate ephemeral script:**
+```bash
+#\!/usr/bin/env bash
+# Check for C++20 features across all repos
+# Output JSON, exit code indicates success/failure
+
+# ... script logic ...
+
+cat << EOJSON
+{
+  "status": "error",
+  "summary": "Found 3 C++20 violations",
+  "violations": [...]
+}
+EOJSON
+exit 1
+```
+
+**Benefits:**
+- Faster (one execution vs multiple tool calls)
+- Cleaner (no context window bloat)
+- Auditable (can review script before running)
+- Reusable (can save to scripts/ if useful)
+
+### Retained Scripts
+
+If an ephemeral script is useful enough to keep, save it to `scripts/` directory.
+
+See [scripts/README.md](scripts/README.md) for guidelines on writing retained scripts.
+
