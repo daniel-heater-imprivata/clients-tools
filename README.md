@@ -132,9 +132,6 @@ AI can generate **ephemeral scripts** on-demand for one-time tasks. These are:
 
 ## Tools
 
-The [tools/](tools/) directory documents tools and workflows used by the team:
-
-- **[jira-cli.md](tools/jira-cli.md)** - Command-line interface for Jira (more reliable than MCP)
-
+The [tools/](tools/) directory documents tools and workflows used by the team
 See [tools/README.md](tools/README.md) for full list and tool selection criteria.
 

@@ -266,7 +266,8 @@ alias jm='jira issue move'
 alias jc='jira issue comment add'
 
 # My issues
-alias jmine='jira issue list -a$(jira me)'
+# Note: Excludes both Done and Closed statuses
+alias jmine='jira issue list -a$(jira me) -s~Done -s~Closed'
 
 # Current sprint
 alias jsprint='jira sprint list --current'
@@ -276,10 +277,11 @@ alias jsprint='jira sprint list --current'
 
 ```bash
 # Use JQL directly with --jql/-q flag
-jira issue list --jql "project = CLIENTS AND assignee = currentUser() AND status != Done"
+jira issue list --jql "project = CLIENTS AND assignee = currentUser() AND status NOT IN (Done, Closed)"
 
 # Create shell aliases for common queries (add to ~/.bashrc or ~/.zshrc)
-alias jmine='jira issue list --jql "assignee = currentUser() AND status != Done"'
+# Note: Use "NOT IN (Done, Closed)" to exclude both completed statuses
+alias jmine='jira issue list --jql "assignee = currentUser() AND status NOT IN (Done, Closed)"'
 alias jblocked='jira issue list --jql "status = Blocked"'
 alias jreview='jira issue list --jql "assignee = currentUser() AND status = '"In Review"'"'
 ```
@@ -329,10 +331,11 @@ This usually means:
 **Solution:**
 ```bash
 # Always use full JQL with quotes
-jira issue list --jql "assignee = currentUser() AND status != Done"
+jira issue list --jql "assignee = currentUser() AND status NOT IN (Done, Closed)"
 
 # Create shell aliases for common queries instead
-alias jmine='jira issue list --jql "assignee = currentUser()"'
+# Note: Use "NOT IN (Done, Closed)" to exclude both completed statuses
+alias jmine='jira issue list --jql "assignee = currentUser() AND status NOT IN (Done, Closed)"'
 ```
 
 
