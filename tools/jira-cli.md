@@ -85,7 +85,7 @@ jira issue list
 jira sprint list --current
 
 # List my assigned issues
-jira issue list -a$(jira me -q)
+jira issue list -a$(jira me)
 
 # List issues by status
 jira issue list -s"In Progress"
@@ -133,7 +133,7 @@ jira issue move CLIENTS-520 "In Progress"
 jira issue comment add CLIENTS-520 "Implemented control plane, working on data plane"
 
 # Assign to yourself
-jira issue assign CLIENTS-520 $(jira me -q)
+jira issue assign CLIENTS-520 $(jira me)
 
 # Link issues
 jira issue link CLIENTS-520 CLIENTS-521 "blocks"
@@ -170,13 +170,13 @@ jira board view <board-id>
 
 ```bash
 # What did I work on yesterday?
-jira issue list -a$(jira me -q) --updated -1d
+jira issue list -a$(jira me) --updated -1d
 
 # What am I working on today?
-jira issue list -a$(jira me -q) -s"In Progress"
+jira issue list -a$(jira me) -s"In Progress"
 
 # Any blockers?
-jira issue list -a$(jira me -q) --jql "status = Blocked"
+jira issue list -a$(jira me) --jql "status = Blocked"
 ```
 
 ### Starting Work on Issue
@@ -189,7 +189,7 @@ jira issue view CLIENTS-520
 jira issue move CLIENTS-520 "In Progress"
 
 # Assign to yourself
-jira issue assign CLIENTS-520 $(jira me -q)
+jira issue assign CLIENTS-520 $(jira me)
 
 # Open in browser for more details
 jira open CLIENTS-520
@@ -266,7 +266,7 @@ alias jm='jira issue move'
 alias jc='jira issue comment add'
 
 # My issues
-alias jmine='jira issue list -a$(jira me -q)'
+alias jmine='jira issue list -a$(jira me)'
 
 # Current sprint
 alias jsprint='jira sprint list --current'
@@ -286,6 +286,36 @@ alias jreview='jira issue list --jql "assignee = currentUser() AND status = '"In
 ---
 
 ## Troubleshooting
+
+### Config File Errors
+
+**Error:** `unsupported protocol scheme ""`
+
+This usually means your config file has YAML syntax errors.
+
+**Common causes:**
+- Duplicate keys in config file (e.g., multiple `queries:` keys)
+- Malformed YAML syntax
+- Server URL not being read correctly
+
+**Solution:**
+```bash
+# Validate YAML syntax
+python3 -c "import yaml; yaml.safe_load(open('~/.config/.jira/.config.yml'))" 2>&1
+
+# If you see errors, check for duplicate keys
+grep -n "^queries:" ~/.config/.jira/.config.yml
+grep -n "^server:" ~/.config/.jira/.config.yml
+
+# Remove duplicate keys manually or re-run jira init
+vim ~/.config/.jira/.config.yml
+```
+
+**Verify fix:**
+```bash
+jira serverinfo  # Should show server info, not error
+```
+
 
 ### JQL Query Errors
 
@@ -517,7 +547,7 @@ jira man
 - `jira open <key>` - Open in browser
 
 **Key Workflows:**
-- Daily standup: `jira issue list -a$(jira me -q)`
+- Daily standup: `jira issue list -a$(jira me)`
 - Start work: `jira issue move <key> "In Progress"`
 - Complete work: `jira issue move <key> "Done"`
 
