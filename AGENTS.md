@@ -45,6 +45,8 @@ Before making any code changes, you MUST read:
 - [C++ Guidelines](standards/cpp-guidelines.md) - C++17 coding standards
 - [Zig Guidelines](standards/zig-guidelines.md) - Zig 0.15.1 coding standards
 - [Just Patterns](standards/just-patterns.md) - Task automation best practices
+- [Logging Guidelines](standards/global/logging-guidelines.md)
+- [Comments Guidelines](standards/global/comments-guidelines.md)
 
 ### Project-Specific Context
 
@@ -233,7 +235,6 @@ All ephemeral scripts must output JSON to stdout:
 Use whatever language is best for the task:
 - **Bash** - Simple file operations, grep, find
 - **Python** - Complex parsing, API calls
-- **Zig** - Performance-critical, cross-platform
 - **Other** - If it makes sense
 
 ### Example

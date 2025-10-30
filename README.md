@@ -86,6 +86,8 @@ Each project repository has an `AGENTS.md` file that references `../clients-tool
 - **[cpp-guidelines.md](standards/cpp-guidelines.md)**
 - **[zig-guidelines.md](standards/zig-guidelines.md)**
 - **[just-patterns.md](standards/just-patterns.md)**
+- **[logging-guidelines.md](standards/global/logging-guidelines.md)** - Logging best practices
+- **[comments-guidelines.md](standards/global/comments-guidelines.md)** - Comments best practices
 
 
 ---
