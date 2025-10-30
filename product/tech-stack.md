@@ -17,27 +17,21 @@
 ### ~~Java~~ (Legacy, Being Replaced)
 - **Status**: **DEPRECATED** - Being phased out
 - **Current Usage**: Gatekeeper (production), Audit (stable)
-- **Migration Timeline**:
-  - Q1 2026: Gatekeeper migration begins
-  - Q2 2026: Java Connect removed from Gatekeeper
-  - Q3 2026: Java Connect fully deprecated
 - **Rationale for Deprecation**:
+  - Customer request
+  - Complexity of distributing Java runtime
   - Performance limitations
   - Memory overhead
-  - Maintenance burden
-  - Team expertise shifting to C++/Zig
-
-**⚠️ DO NOT use Java for new code. All new development in C++17 or Zig.**
 
 ---
 
 ## Core Libraries
 
-### Boost (1.80+)
-- **Boost.Asio**: Async I/O foundation
-- **Boost.Beast**: HTTP/WebSocket client
-- **Boost.URL**: URL parsing
-- **Rationale**: Industry-standard, well-tested, cross-platform
+### Boost (1.80+) **To be removed**
+- **Boost.Asio**: Async I/O foundation (plan to replace with header-only ASIO)
+- **Boost.Beast**: HTTP/WebSocket client (plan to replace with Curl)
+- **Boost.URL**: URL parsing (plan to replace with simple internal implementation)
+- **Longer term**: Replace with Zig standard library
 
 ### libssh2
 - **Purpose**: SSH tunnel management
@@ -48,10 +42,12 @@
 - **Purpose**: TLS/SSL for control plane
 - **Version**: 1.1.1+ or 3.0+
 - **Rationale**: Industry standard for cryptography
+- **Long term**: Replace with native OS TLS providers for better FIPS support (Inspired by Rust native-TLS)
 
 ### spdlog
 - **Purpose**: High-performance logging
 - **Rationale**: Fast, flexible, header-only option
+- **Long term**: Replace with Zig standard library logging
 
 ---
 
@@ -60,14 +56,21 @@
 ### CMake (3.20+)
 - **Purpose**: Cross-platform build configuration
 - **Rationale**: Industry standard, good IDE support
+- **Plan to replace**: Replace with Zig build system soon to enable cross-compilation
 
 ### Conan (2.0+)
 - **Purpose**: Dependency management
 - **Rationale**: C++ package manager, reproducible builds
+- **Plan to replace**: Replace with Zig or Devbox packages and header-only C++ equivalents
 
 ### Just
 - **Purpose**: Task automation
 - **Rationale**: Simple, expressive, better than Make for tasks
+
+### Devbox
+- **Purpose**: Isolated reproducible builds
+
+**Fallback**: We need to maintain current build options with Make and tools installed on runners until CI migrates to the new plan
 
 ---
 
@@ -76,6 +79,7 @@
 ### Catch2
 - **Purpose**: Unit and integration testing
 - **Rationale**: Modern, expressive, header-only option
+- **Long term**: Replace with Zig standard testing
 
 ### Sanitizers
 - **ASAN**: Address sanitizer (memory safety)
@@ -109,48 +113,24 @@
 
 ### Conan Packages
 - **Internal**: Private Conan repository
-- **External**: Public packages for SDK consumers (future)
 
 ### Linking Strategy
-- **Client Applications**: Static linking (single binary)
-- **Gatekeeper**: Shared library (flexibility)
-- **SDKs**: Both static and shared options
+- **Default**: Static linking (single binary)
+- **SDKs**: Both shared libraries
 
 ---
 
 ## Architecture Decisions
-
-### Why C++17 over C++20?
-- **Pros**: Stable, broad compiler support, production-proven
-- **Cons**: Missing some nice features (std::span, ranges, concepts)
-- **Decision**: Stability and compatibility over latest features
 
 ### Why Zig over Rust?
 - **Pros**: Simpler than Rust, excellent C interop, cross-compilation
 - **Cons**: Younger ecosystem, less mature tooling
 - **Decision**: Simplicity and C interop more important than Rust's guarantees
 
-### Why Boost.Asio over libuv?
-- **Pros**: C++ native, type-safe, well-documented
-- **Cons**: Large dependency, learning curve
-- **Decision**: C++ integration and type safety worth the cost
-
 ### Why Static Linking for Client Apps?
 - **Pros**: Single binary, no DLL hell, easier deployment
 - **Cons**: Larger binary size
 - **Decision**: Deployment simplicity more important than binary size
-
-### Why Conan over vcpkg?
-- **Pros**: Better C++ support, more mature, reproducible builds
-- **Cons**: Learning curve
-- **Decision**: Industry momentum and maturity
-
-### Why Deprecate Java?
-- **Performance**: C++/Zig significantly faster
-- **Memory**: Lower memory footprint
-- **Maintenance**: Team expertise shifting to C++/Zig
-- **Cross-compilation**: Zig makes cross-platform builds easier
-- **Decision**: Long-term benefits outweigh migration cost
 
 ---
 
@@ -161,17 +141,3 @@ See [standards/](../standards/) for detailed guidelines:
 - [Zig Guidelines](../standards/zig-guidelines.md)
 - [Just Patterns](../standards/just-patterns.md)
 
----
-
-## Future Considerations
-
-### Potential Changes
-- **HTTP/3**: May require different library (not in Boost yet)
-- **QUIC**: May need custom implementation or third-party library
-- **C++20**: Consider migration in 2027+ when compilers mature
-- **Zig 0.16.0**: Monitor release, evaluate migration
-
-### Technology Watch
-- **Rust Interop**: Consider Rust for performance-critical components
-- **WebAssembly**: Potential for browser-based clients
-- **Cloud Native**: Kubernetes-specific features

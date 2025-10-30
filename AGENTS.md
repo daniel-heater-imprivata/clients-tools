@@ -31,15 +31,15 @@ Be direct and honest. Be bold, but humble\!
 
 ## Required Reading
 
-Before making any code changes, you MUST read:
-
-### Team Context (This Repository)
+Before planning tasks, you must read
 
 **Product:**
 - [Mission](product/mission.md) - What we're building and why
 - [Roadmap](product/roadmap.md) - Feature priorities and timeline
 - [Tech Stack](product/tech-stack.md) - Technology choices and rationale
 - [Architecture](product/architecture.md) - How the pieces fit together
+
+Before making any code changes, you MUST read:
 
 **Standards:**
 - [C++ Guidelines](standards/cpp-guidelines.md) - C++17 coding standards
@@ -49,35 +49,6 @@ Before making any code changes, you MUST read:
 ### Project-Specific Context
 
 Each project repository has its own `AGENTS.md` that references this file and adds project-specific context. Always read both.
-
----
-
-## Critical Rules
-
-### Language & Standards
-
-1. **C++17 ONLY** - No C++20 features (no std::span, ranges, concepts, coroutines)
-2. **Public API is C-only** - `include/` directory must use C types, `extern "C"`, no C++ features
-3. **RAII everywhere** - Smart pointers, no raw `new`/`delete`
-4. **Const correctness** - Think like Rust's borrow checker
-5. **Use `#pragma once`** - Not header guards
-
-### Java is DEPRECATED
-
-**⚠️ DO NOT suggest Java for new code.**
-
-Java is being phased out:
-- Gatekeeper: Java → C++/Zig (Q1 2026)
-- All new development: C++17 or Zig 0.15.1
-
-If you see Java code, acknowledge it exists but recommend C++/Zig for new features.
-
-### Dependencies
-
-1. **Use Conan for dependencies** - Don't manually edit `conanfile.py` for simple additions
-2. **Question every dependency** - Do we really need it?
-3. **Prefer Boost over custom** - If Boost has it, use Boost
-4. **No bleeding-edge libraries** - Production stability over latest features
 
 ---
 
@@ -105,11 +76,11 @@ If you see Java code, acknowledge it exists but recommend C++/Zig for new featur
 2. **Read relevant standards** - C++/Zig guidelines
 3. **Check architecture** - How does this fit?
 4. **Check roadmap** - Is this aligned with priorities?
-5. **Question the problem** - Does this need solving?
+5. **Simplify** - How do we simplify this?
 
 ### While Coding
 
-1. **Follow standards** - C++17, RAII, const correctness
+1. **Follow standards** - As documented
 2. **Subtract first** - Remove before adding
 3. **Question complexity** - Is there a simpler way?
 4. **Think about tests** - How will this be tested?
@@ -118,7 +89,7 @@ If you see Java code, acknowledge it exists but recommend C++/Zig for new featur
 ### After Coding
 
 1. **Suggest tests** - Unit tests, integration tests, sanitizers
-2. **Check documentation** - Does this need docs?
+2. **Check documentation** - Does this need docs? Are there excess docs?
 3. **Review for simplicity** - Can we remove anything?
 4. **Consider edge cases** - What can go wrong?
 
@@ -126,11 +97,18 @@ If you see Java code, acknowledge it exists but recommend C++/Zig for new featur
 
 ## Testing Philosophy
 
-You are very good at writing unit tests and making them work. If you write code, suggest to the user to test the code by writing tests and running them.
+Use TDD!
 
-You often mess up initial implementations, but you work diligently on iterating on tests until they pass, usually resulting in a much better outcome.
+- Before fixing an issue, write a test
+- Before writing code, write a test
+- Fix flaky tests
+- Write tests to verify behavior, not implementation
+- Prefer higher level tests (component) to lower-level (unit)
+- Only keep high-value tests
+- Look for opportunities to consolidate tests and remove duplicate coverage
+- Tests are also documentation. Make them clean and clear
 
-Before running tests, make sure that you know how tests relating to the user's request should be run.
+Before concluding a task ensure all tests pass
 
 ---
 
@@ -151,24 +129,26 @@ Before running tests, make sure that you know how tests relating to the user's r
 - C interop for FFI
 - Cross-compilation for multi-platform
 
-### Build Patterns (See standards/just-patterns.md)
+### Build Patterns
 
 - Use `just` for task automation
-- Use `make` for build orchestration
-- Use `conan` for dependencies
-- Use `cmake` for build configuration
+- Use `devbox` for tool installation
+
+Longer term goal is to remove `conan`
+**Minimize dependencies** and prefer header-only dependencies when required
+
+Longer term goal is to replace `cmake` with Zig build system and `make` with Just
+
+Longer term goal is to have isolated development environments with `devbox`
 
 ---
 
 ## When You Don't Know
 
-**Say "I don't know."**
+**Say "I don't know."**.
 
-Don't invent:
-- Version numbers
-- API signatures
-- Configuration options
-- File paths
+- Do not hallucinate answers
+- Do not provide misleading sychophatic response to appear more helpfule/smarter
 
 If you're unsure, ask or look it up using available tools.
 
@@ -178,7 +158,7 @@ If you're unsure, ask or look it up using available tools.
 
 If you notice yourself going around in circles, or going down a rabbit hole, for example calling the same tool in similar ways multiple times to accomplish the same task, ask the user for help.
 
-Invoke "The Intern Protocol" if needed.
+Invoke "The Intern Protocol".
 
 ---
 
@@ -188,4 +168,4 @@ Invoke "The Intern Protocol" if needed.
 
 Every line of code should serve this mission. If it doesn't, question why it exists.
 
-**Subtract first. Be bold. Be honest. Keep it simple.**
+**Subtract first. Be honest. Keep it simple.**

@@ -2,9 +2,8 @@
 
 ## Overview
 
-The Clients team builds the connectivity layer for PAS (Privileged Access Security) - enabling secure, auditable remote access without VPN. Our components implement a **two-plane architecture** that works across multiple deployment scenarios.
-
-For comprehensive PAS system documentation, see: `~/src/plumbing/dh-background-docs/docs/`
+The Clients team builds the connectivity layer for PAS (Privileged Access Security) - enabling secure, auditable remote access without VPN.
+Our components implement a **two-plane architecture** for data delivery and provide clients for remote access.
 
 ---
 
@@ -44,7 +43,7 @@ For comprehensive PAS system documentation, see: `~/src/plumbing/dh-background-d
 - Handles user interface and application-specific logic
 - Data plane entry point
 
-**2. librssconnect (C++ Library)**
+**2. librssconnect**
 - Implements both control and data planes
 - Provides C API for FFI compatibility
 - Core connectivity engine
@@ -85,11 +84,13 @@ For comprehensive PAS system documentation, see: `~/src/plumbing/dh-background-d
 - **API**: C API (public), C++ API (internal)
 - **Scale**: 1-few connections (clients), dozens-100 (gatekeeper)
 
-### Client Applications
+### Universal Connection Manager
 - **Depends on**: librssconnect
+- **Provides**: User access to PAS server
+
+### Client Applications
 - **Provides**: User interface, protocol-specific logic
 - **Examples**: RDP client, SSH client, FTP client
-- **Scale**: 1-few connections per instance
 
 ### Gatekeeper
 - **Current**: Java Connect (production)
@@ -102,22 +103,6 @@ For comprehensive PAS system documentation, see: `~/src/plumbing/dh-background-d
 - **Role**: MiTM session recording
 - **Scale**: 1000-2000 concurrent connections
 - **Note**: Not part of clients team scope (server team)
-
----
-
-## Deployment Scenarios
-
-### Client Applications (Current)
-- **Scale**: 1-few connections per instance
-- **Role**: Data plane entry point
-- **Flow**: Local App → librssconnect → SSH tunnel → Server
-- **Distribution**: Static linking, Conan packages
-
-### Gatekeeper (Q1 2026 Migration)
-- **Scale**: Dozens to ~100 connections per instance
-- **Role**: Data plane exit point
-- **Flow**: SSH tunnel → librssconnect → Internal Service
-- **Migration**: Java Connect → C++/Zig librssconnect
 
 ---
 
@@ -134,7 +119,7 @@ For comprehensive PAS system documentation, see: `~/src/plumbing/dh-background-d
 - Allows supporting any TCP-based protocol
 
 ### Async I/O
-- Boost.Asio for high-performance async I/O
+- Boost.Asio for high-performance async I/O (may swwitch to single-threaded event loop)
 - Non-blocking operations
 - Scales to hundreds of concurrent connections
 
@@ -153,21 +138,3 @@ For comprehensive PAS system documentation, see: `~/src/plumbing/dh-background-d
 3. **Data Plane Auth**: librssconnect establishes SSH tunnel using provided credentials
 4. **Session**: Authenticated session maintained for duration of connection
 
----
-
-## For More Details
-
-**Comprehensive documentation:**
-- System Overview: `~/src/plumbing/dh-background-docs/docs/architecture/system-overview.md`
-- Component Model: `~/src/plumbing/dh-background-docs/docs/architecture/component-model.md`
-- Data Flow: `~/src/plumbing/dh-background-docs/docs/architecture/data-flow.md`
-
-**Component-specific:**
-- librssconnect: `~/src/plumbing/dh-background-docs/docs/architecture/librssconnect.md`
-- Gatekeeper: `~/src/plumbing/dh-background-docs/docs/architecture/gatekeeper.md`
-- Audit: `~/src/plumbing/dh-background-docs/docs/architecture/audit-system.md`
-
-**Specifications:**
-- RSS Protocol: `~/src/plumbing/dh-background-docs/docs/specifications/rss-protocol.md`
-- Security Model: `~/src/plumbing/dh-background-docs/docs/specifications/security-model.md`
-- Deployment Model: `~/src/plumbing/dh-background-docs/docs/specifications/deployment-model.md`
