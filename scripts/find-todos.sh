@@ -36,7 +36,7 @@ for repo in "${REPOS[@]}"; do
   repo_path="$PARENT_DIR/$repo"
   
   # Skip if repo doesn't exist
-  if [[ \! -d "$repo_path" ]]; then
+  if [[ ! -d "$repo_path" ]]; then
     continue
   fi
   
