@@ -272,22 +272,39 @@ alias jmine='jira issue list -a$(jira me -q)'
 alias jsprint='jira sprint list --current'
 ```
 
-### Custom JQL Queries
+### Using JQL Directly
 
 ```bash
-# Add to ~/.config/.jira/.config.yml
-queries:
-  my-open: "project = CLIENTS AND assignee = currentUser() AND status \!= Done"
-  my-review: "project = CLIENTS AND assignee = currentUser() AND status = 'In Review'"
-  blocked: "project = CLIENTS AND status = Blocked"
+# Use JQL directly with --jql/-q flag
+jira issue list --jql "project = CLIENTS AND assignee = currentUser() AND status != Done"
 
-# Use with:
-jira issue list --jql my-open
+# Create shell aliases for common queries (add to ~/.bashrc or ~/.zshrc)
+alias jmine='jira issue list --jql "assignee = currentUser() AND status != Done"'
+alias jblocked='jira issue list --jql "status = Blocked"'
+alias jreview='jira issue list --jql "assignee = currentUser() AND status = '"In Review"'"'
 ```
-
 ---
 
 ## Troubleshooting
+
+### JQL Query Errors
+
+**Error:** `unsupported protocol scheme ""`
+
+This usually means:
+- JQL syntax error
+- Missing quotes around JQL query
+- Trying to use query alias (not supported)
+
+**Solution:**
+```bash
+# Always use full JQL with quotes
+jira issue list --jql "assignee = currentUser() AND status != Done"
+
+# Create shell aliases for common queries instead
+alias jmine='jira issue list --jql "assignee = currentUser()"'
+```
+
 
 ### Authentication Issues
 
